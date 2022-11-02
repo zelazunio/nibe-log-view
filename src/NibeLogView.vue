@@ -1,26 +1,23 @@
 <template>
   <div id="app">
     <resize-sensor @resize="resize" />
-    <div class="toolsContainer">
-      <div class="column">
-        <file-reader @load="loadData" />
-        <div class="resolutionContainer">
-          <div>Choose resolution:</div>
-          <select name="resolution" id="resolution" v-model="resolutionSelector" @change="updateResolution" :disabled="!(columnsConfiguration.length > 0)">
-            <option :value="constants.ONE_SECOND">1 s</option>
-            <option :value="constants.FIVE_SECONDS">5 s</option>
-            <option :value="constants.TEN_SECONDS">10 s</option>
-            <option :value="constants.THIRTY_SECONDS">30 s</option>
-            <option :value="constants.ONE_MINUTE">1 min</option>
-            <option :value="constants.FIVE_MINUTES">5 min</option>
-            <option :value="constants.TEN_MINUTES">10 min</option>
-          </select>
+    <menu-button :menuVisible="menuVisible" @click="menuVisible=!menuVisible"/>
+    <info v-if="infoVisible" @close="infoVisible=false"></info>
+    <div class="menu" :class="{ menuOpen: menuVisible }">
+      <div class="toolsContainer">
+        <div class="column infoButtonContainer">
+          <button class="infoButton" @click="infoVisible=true">
+            INFO 
+          </button>
         </div>
+        <div class="column">
+        <file-reader @load="loadData" />
+        <resolution-selector :disabled="columnsConfiguration.length === 0" @change="updateResolution"/>
       </div>
       <div
         class="column"
-        style="display: flex; flex-wrap: wrap; justify-content: flex-start"
         v-if="columnsConfiguration.length > 0"
+        style="flex-grow: 1;"
       >
         <template v-for="(serie, index) in visibleSeries">
           <div v-if="index > 1" :key="index" class="checkboxContainer">
@@ -37,10 +34,9 @@
         </template>
       </div>
     </div>
+    </div>
     <div class="chartContainer">
-      <div v-if="creatingData" class="spinner">
-        <div>Working...</div>
-      </div>
+      <spinner :show="creatingData"/>
       <line-chart
         :series="series"
         :height="height"
@@ -57,6 +53,12 @@ import DataPoint from "./classes/DataPoint";
 import LineChart from "@/components/LineChart.vue";
 import ResizeSensor from "vue-resize-sensor";
 import constants from "@/const.js";
+import MenuButton from './components/MenuButton.vue';
+import Info from './components/Info.vue';
+import Spinner from './components/Spinner.vue';
+import ResolutionSelector from './components/ResolutionSelector.vue';
+
+require("@/assets/css/menu.css");
 
 export default {
   name: "NibeLogView",
@@ -64,9 +66,12 @@ export default {
     FileReader,
     LineChart,
     ResizeSensor,
+    MenuButton,
+    Info,
+    Spinner,
+    ResolutionSelector,
   },
   data() {
-    LineChart;
     return {
       sourceData: {},
       columnsConfiguration: [],
@@ -75,8 +80,10 @@ export default {
       chartData: {},
       width: 0,
       height: 0,
+      menuVisible: false,
+      infoVisible: false,
       resolution: constants.ONE_MINUTE,
-      resolutionSelector: constants.ONE_MINUTE,
+      constants: constants,
       visibleSeries: [
         false,
         false,
@@ -104,9 +111,6 @@ export default {
     };
   },
   computed: {
-    constants() {
-      return constants;
-    },
     series() {
       let result = [];
       this.columnsConfiguration.forEach((column, index) => {
@@ -213,15 +217,33 @@ export default {
       if (process.env.NODE_ENV !== "development") return;
       console.timeEnd(timerName);
     },
-    updateResolution() {
+    updateResolution(resolution) {
       this.creatingData = true;
-      setTimeout(()=>{this.resolution = this.resolutionSelector}, 100)
+      setTimeout(() => {
+        this.resolution = resolution;
+      }, 100);
     },
   },
 };
 </script>
 
 <style>
+@media screen and (max-width: 369px) {
+  :root {
+    --menuWidth: 100%;
+  }
+}
+@media screen and (min-width: 370px) and (max-width: 639px){
+  :root {
+    --menuWidth: 50%;
+  }
+}
+@media screen and (min-width: 640px) {
+  :root {  
+  --menuWidth: 30%;
+  }
+}
+
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
@@ -234,9 +256,13 @@ export default {
   right: 0;
   top: 0;
   bottom: 0;
+  display: flex;
 }
 .toolsContainer {
   display: flex;
+  width: 100%;
+  flex-direction: column;
+  height: 100%;
 }
 
 .column {
@@ -244,45 +270,30 @@ export default {
   background-color: rgba(255, 255, 255, 0.2);
   border: 2px solid rgba(0, 0, 0, 0.2);
   border-radius: 4px;
-}
-
-.resolutionContainer {
-  margin-top: 8px;
+  flex-direction: column;
 }
 
 .checkboxContainer {
   padding: 0.2em 1em;
+  margin: auto;
 }
 
 .chartContainer {
   position: relative;
+  width: 100%;
+  min-width: 100%;
+  max-width: 100%;
 }
 
-.spinner {
-  position: absolute;
-  left: 0;
-  right: 0;
-  top: 0;
-  bottom: 0;
-  z-index: 10;
-  background-color: rgba(0, 0, 0, 0.2);
-  font-size: 10em;
-  font-weight: 700;
-  display: flex;
-  align-items: center;
+.infoButtonContainer {
+  height: 60px; 
+  display: flex; 
+  align-items: flex-start; 
   justify-content: center;
-  animation: spinnerAnimation 2s infinite ease-in-out;
 }
 
-@keyframes spinnerAnimation {
-  0% {
-    color: rgba(72, 61, 139, 1);
-  }
-  50% {
-    color: rgba(72, 61, 139, 0);
-  }
-  100% {
-    color: rgba(72, 61, 139, 1);
-  }
+.infoButton {
+  padding: 5px 20px;
+  font-weight: 500;
 }
 </style>

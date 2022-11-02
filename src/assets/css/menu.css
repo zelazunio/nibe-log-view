@@ -1,0 +1,41 @@
+.menu {
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 0;
+    background-color: rgb(37, 98, 122);
+    overflow: hidden;
+    animation: menuClose 500ms;
+    z-index: 200;
+    color: white;
+  }
+  
+  .menuOpen {
+    animation: menuOpen 500ms;
+    width: var(--menuWidth);
+  }
+  
+  @keyframes menuOpen {
+    0% {
+      width: 0;
+    }
+    1% {
+      width: 7%;
+    }
+    100% {
+      width: var(--menuWidth);
+    }
+  }
+  
+  @keyframes menuClose {
+    0% {
+      width: var(--menuWidth);
+    }
+    99% {
+      width: 7%;
+    }
+    100% {
+      width: 0;
+    }
+  }

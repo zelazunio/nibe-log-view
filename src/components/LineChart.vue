@@ -50,7 +50,7 @@ export default {
   },
   computed: {
     chartHeight() {
-      return Math.floor(this.height * 0.75);
+      return Math.floor(this.height * 0.95);
     },
   },
   props: {
