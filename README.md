@@ -1,5 +1,8 @@
 # nibe-log-view
 
+Simple app to view logs from Nibe heat pumps.
+So far tested on F1226, if your logs are not loading and you want to contribute to this tool please send your log file to ja_zel@wp.pl
+
 ## Project setup
 ```
 npm install

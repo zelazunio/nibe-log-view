@@ -4,7 +4,10 @@
       <div class="closeButton" @click="$emit('close')">
         <template>X</template>
       </div>
-      Info
+      <h2>Nibe log viewer</h2>
+      <p>Simple app to view logs from Nibe heat pumps.</p>
+      <p>So far tested on F1226, if your logs are not loading and you want to contribute to this tool please send your log file to <a href="mailto:ja_zel@wp.pl">my mail</a> </p>
+      <p>Source is available on <a href="https://github.com/zelazunio/nibe-log-view" target="_blank">Github</a>.</p>
     </div>
   </div>
 </template>

@@ -17,7 +17,7 @@
       <div
         class="column"
         v-if="columnsConfiguration.length > 0"
-        style="flex-grow: 1;"
+        style="flex-grow: 1; overflow-y: auto"
       >
         <template v-for="(serie, index) in visibleSeries">
           <div v-if="index > 1" :key="index" class="checkboxContainer">
@@ -41,6 +41,7 @@
         :series="series"
         :height="height"
         @chartUpdated="onChartUpdated"
+        @click="manuVisible=false"
       />
     </div>
   </div>
@@ -257,6 +258,7 @@ export default {
   top: 0;
   bottom: 0;
   display: flex;
+  overflow: hidden;
 }
 .toolsContainer {
   display: flex;
