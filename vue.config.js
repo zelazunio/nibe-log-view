@@ -1,3 +1,3 @@
 module.exports = {
-    publicPath: process.env.NODE_ENV === "production" ? "/nibe-log-view/" : "/"
+    publicPath: process.env.NODE_ENV === "production" ? "/" : "/"
 }
