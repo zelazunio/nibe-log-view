@@ -3,8 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "serve": "vue-cli-service serve",
-    "build": "vue-cli-service build",
+    "serve": "vue-cli-service serve --mode development",
+    "build-vercel": "vue-cli-service build --mode production.vercel",
+    "build-ghpages": "vue-cli-service build --mode production.ghpages",
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
